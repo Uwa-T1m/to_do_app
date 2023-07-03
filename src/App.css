@@ -470,5 +470,7 @@ color:var(--white)
 
 .toggle-mode-btn{
   background: transparent;
-  font-size: 20px;
+  font-size: 28px;
+  border: 0;
+  padding: 20px;
 }
