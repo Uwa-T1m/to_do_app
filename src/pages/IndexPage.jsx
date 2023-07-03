@@ -83,13 +83,13 @@ export default function IndexPage() {
   }, [tasks]);
 
   return (
-    <main className={darkMode ? 'dark-mode' : ''} style={{ minHeight: '100vh', position: 'absolute' ,top:'0', left:'0'}}>
+    <main  style={{ minHeight: '100vh', position: 'absolute' ,top:'0', left:'0'}}>
       <header>
         <button onClick={toggleDarkMode} className="toggle-mode-btn" style={{color:darkMode ? '#fff' : '#333538' }}>
           {darkMode ? <FaSun /> : <FaMoon />}
         </button>
       </header>
-      <form className="task-form" onSubmit={handleSubmit}>
+      <form className="task-form" onSubmit={handleSubmit} >
         <h4>task manager</h4>
         <div className="form-control">
           <input
