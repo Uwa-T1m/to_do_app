@@ -467,3 +467,8 @@ form > :last-child {
 .dark-mode .empty-tasks{
 color:var(--white)
 }
+
+.toggle-mode-btn{
+  background: transparent;
+  font-size: 20px;
+}

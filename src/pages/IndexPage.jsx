@@ -85,7 +85,7 @@ export default function IndexPage() {
   return (
     <main className={darkMode ? 'dark-mode' : ''} style={{ minHeight: '100vh' }}>
       <header>
-        <button onClick={toggleDarkMode} className="toggle-mode-btn">
+        <button onClick={toggleDarkMode} className="toggle-mode-btn" style={{color:darkMode ? '#fff' : '#333538' }}>
           {darkMode ? <FaSun /> : <FaMoon />}
         </button>
       </header>
