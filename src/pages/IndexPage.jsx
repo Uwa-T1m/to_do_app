@@ -83,7 +83,7 @@ export default function IndexPage() {
   }, [tasks]);
 
   return (
-    <main  style={{ minHeight: '100vh', position: 'absolute' ,top:'0', left:'0'}}>
+    <main  style={{ minHeight: '100vh', position: 'relative'}} className={darkMode ? 'dark-mode' : ''}>
       <header>
         <button onClick={toggleDarkMode} className="toggle-mode-btn" style={{color:darkMode ? '#fff' : '#333538' }}>
           {darkMode ? <FaSun /> : <FaMoon />}

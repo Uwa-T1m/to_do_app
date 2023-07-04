@@ -472,6 +472,6 @@ color:var(--white)
   background: transparent;
   font-size: 28px;
   border: 0;
-  position: fixed;
-  right: 10px;
+  margin-left: 90%;
+  margin-top: 20px;
 }

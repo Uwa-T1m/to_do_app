@@ -1,70 +1,191 @@
-# Getting Started with Create React App
+# Task Manager App By Chibuokem
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Features
+This is a task manager app / to do list app which can create, read update and delete **Tasks**. This app was created using ***React.js.***
 
-## Available Scripts
+You can experience the app by clicking [this link](chibuokem-task-manager.netlify.app)
 
-In the project directory, you can run:
+### If you wish to run the app on your local computer:
 
-### `npm start`
+Run:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+npm install
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+to install all `dependencies/node_modules` needed.
 
-### `npm test`
+When downloaded, you can make your changes on the `IndexPage.jsx` which contains the following code:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```jsx
+import React, { useState, useEffect } from 'react';
+import { FaTrash, FaEdit, FaMoon, FaSun } from 'react-icons/fa';
+import '../App.css';
 
-### `npm run build`
+export default function IndexPage() {
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => {
+    const storedDarkMode = localStorage.getItem('darkMode');
+    return storedDarkMode ? JSON.parse(storedDarkMode) : false;
+  });
+  const [taskInput, setTaskInput] = useState('');
+  const [editingTask, setEditingTask] = useState(null);
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (taskInput.trim() !== '') {
+      const newTask = {
+        id: tasks.length + 1,
+        name: taskInput,
+        completed: false,
+      };
+      setTasks([...tasks, newTask]);
+      setTaskInput('');
+    }
+  };
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  const updateTask = (taskId, newName) => {
+    const updatedTasks = tasks.map((task) => {
+      if (task.id === taskId) {
+        return { ...task, name: newName };
+      }
+      return task;
+    });
+    setTasks(updatedTasks);
+    setEditingTask(null);
+  };
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  const handleTaskCompletion = (taskId) => {
+    const updatedTasks = tasks.map((task) => {
+      if (task.id === taskId) {
+        return { ...task, completed: !task.completed };
+      }
+      return task;
+    });
+    setTasks(updatedTasks);
+  };
 
-### `npm run eject`
+  const deleteTask = (taskId) => {
+    const updatedTasks = tasks.filter((task) => task.id !== taskId);
+    setTasks(updatedTasks);
+  };
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
+  };
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  const handleKeyPress = (e, taskId) => {
+    if (e.key === 'Enter') {
+      const newName = e.target.value.trim();
+      if (newName !== '') {
+        updateTask(taskId, newName);
+      }
+    }
+  };
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+  useEffect(() => {
+    const storedTasks = localStorage.getItem('tasks');
+    if (storedTasks) {
+      setTasks(JSON.parse(storedTasks));
+    } else {
+      setTasks([]);
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+  }, []);
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
 
-## Learn More
+  return (
+    <main  style={{ minHeight: '100vh', position: 'relative'}} className={darkMode ? 'dark-mode' : ''}>
+      <header>
+        <button onClick={toggleDarkMode} className="toggle-mode-btn" style={{color:darkMode ? '#fff' : '#333538' }}>
+          {darkMode ? <FaSun /> : <FaMoon />}
+        </button>
+      </header>
+      <form className="task-form" onSubmit={handleSubmit} >
+        <h4>task manager</h4>
+        <div className="form-control">
+          <input
+            type="text"
+            name="name"
+            className="task-input"
+            placeholder="e.g. wash dishes"
+            value={editingTask !== null ? tasks.find((task) => task.id === editingTask)?.name : taskInput}
+            onChange={(e) => setTaskInput(e.target.value)}
+          />
+          <button type="submit" className="btn submit-btn">
+            Submit
+          </button>
+        </div>
+      </form>
+      {loading ? (
+        <section className="tasks-container">
+          <p className="loading-text">Loading...</p>
+        </section>
+      ) : (
+        <section className="tasks-container">
+          {tasks.length === 0 ? (
+            <p className="empty-tasks">No tasks found.</p>
+          ) : (
+            <ul className="tasks">
+              {tasks.map((task) => (
+                <li key={task.id} className={`task ${task.completed ? 'completed' : ''}`} >
+                  {editingTask === task.id ? (
+                    <input
+                      type="text"
+                      value={taskInput}
+                      onChange={(e) => setTaskInput(e.target.value)}
+                      onKeyPress={(e) => handleKeyPress(e, task.id)}
+                    />
+                  ) : (
+                    <>
+                      <span className={`single-task ${task.completed ? 'completed' : ''}`}>
+                        <span
+                          className={`${task.completed ? 'completed' : ''}`}
+                          onClick={() => handleTaskCompletion(task.id)}
+                        >
+                          {task.name}
+                        </span>
+                        <div className="task-links">
+                          <input
+                            type="checkbox"
+                            checked={task.completed}
+                            onChange={() => handleTaskCompletion(task.id)}
+                          />
+                          <button onClick={() => setEditingTask(task.id)} className="edit-link">
+                            <FaEdit />
+                          </button>
+                          <button onClick={() => deleteTask(task.id)} className="delete-btn">
+                            <FaTrash />
+                          </button>
+                        </div>
+                      </span>
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
+    </main>
+  );
+}
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+You can run the file by running the following code on your `terminal`:
+```bash
+npm start
+```
 
-### Code Splitting
+This will open the code on [localhost:3000](localhost:3000).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+You can get the github repo at: [uwa-t1m.github.io/to_do_app](uwa-t1m.github.io/to_do_app)
