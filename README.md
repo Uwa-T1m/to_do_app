@@ -1,4 +1,6 @@
 # Task Manager App By Chibuokem
+[chibuokem-task-manager.netlify.app](chibuokem-task-manager.netlify.app)
+
 
 ### Features
 This is a task manager app / to do list app which can create, read update and delete **Tasks**. This app was created using ***React.js.***
@@ -10,7 +12,7 @@ You can experience the app by clicking [this link](chibuokem-task-manager.netlif
 Run:
 
 ```bash
-npm install
+npm install && npm start
 ```
 
 to install all `dependencies/node_modules` needed.
@@ -188,4 +190,5 @@ npm start
 
 This will open the code on [localhost:3000](localhost:3000).
 
+### Github Repo:
 You can get the github repo at: [uwa-t1m.github.io/to_do_app](uwa-t1m.github.io/to_do_app)
